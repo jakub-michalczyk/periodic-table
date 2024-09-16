@@ -1,6 +1,6 @@
-<div class="px-4 max-w-lg mx-auto bg-red py-6">
+<div class="px-4 max-w-lg mx-auto py-6">
   <mat-form-field class="w-full">
-    <input matInput placeholder="Filter" />
+    <input matInput placeholder="Filter" [formControl]="filterControl" />
   </mat-form-field>
 
   @if(isLoading){
@@ -53,5 +53,9 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+  } @if(filteredData.length === 0){
+  <div class="text-white text-center my-4">
+    <p>No search results.</p>
+  </div>
   }
 </div>
