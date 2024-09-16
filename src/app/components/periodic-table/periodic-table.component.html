@@ -1,0 +1,57 @@
+<div class="px-4 max-w-lg mx-auto bg-red py-6">
+  <mat-form-field class="w-full">
+    <input matInput placeholder="Filter" />
+  </mat-form-field>
+
+  @if(isLoading){
+  <div
+    class="spinner-container bg-white flex justify-center items-center p-12 h-96"
+  >
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+  } @else {
+  <table mat-table [dataSource]="filteredData">
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element" class="!px-2 md:!px-4">
+        {{ element.position }}
+      </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element" class="!px-2 md:!px-4">
+        {{ element.name }}
+      </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef>Weight</th>
+      <td mat-cell *matCellDef="let element" class="!px-2 md:!px-4">
+        {{ element.weight }}
+      </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef>Symbol</th>
+      <td mat-cell *matCellDef="let element" class="!font-bold !px-2 md:!px-4">
+        {{ element.symbol }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element" class="!px-2 md:!px-4">
+        <button mat-flat-button>Edit</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  }
+</div>
