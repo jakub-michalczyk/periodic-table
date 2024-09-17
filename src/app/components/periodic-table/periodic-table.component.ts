@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { PeriodicTableService } from './periodic-table.service';
@@ -9,6 +9,7 @@ import { PeriodicElement } from './periodic-table.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EditModalComponent } from '../edit-modal/edit-modal.component';
 
 @Component({
   selector: 'app-periodic-table',
@@ -39,7 +40,10 @@ export class PeriodicTableComponent implements OnInit {
   isLoading = true;
   private destroyerRef = inject(DestroyRef);
 
-  constructor(private periodicTableService: PeriodicTableService) {}
+  constructor(
+    private periodicTableService: PeriodicTableService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -80,5 +84,35 @@ export class PeriodicTableComponent implements OnInit {
         element.weight.toString().includes(filter) ||
         element.position.toString().includes(filter)
     );
+  }
+
+  openEditModal(element: PeriodicElement): void {
+    const dialogRef = this.dialog.open(EditModalComponent, {
+      width: '250px',
+      data: { ...element },
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyerRef))
+      .subscribe((result) => {
+        if (result) {
+          this.updateElement(result);
+        }
+      });
+  }
+
+  private updateElement(updatedElement: PeriodicElement): void {
+    const index = this.dataSource.findIndex(
+      (el) => el.position === updatedElement.position
+    );
+    if (index !== -1) {
+      this.dataSource = [
+        ...this.dataSource.slice(0, index),
+        updatedElement,
+        ...this.dataSource.slice(index + 1),
+      ];
+      this.applyFilter(this.filterControl.value || '');
+    }
   }
 }

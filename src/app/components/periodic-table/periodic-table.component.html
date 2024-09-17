@@ -46,7 +46,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element" class="!px-2 md:!px-4">
-        <button mat-flat-button>Edit</button>
+        <button mat-flat-button (click)="openEditModal(element)">Edit</button>
       </td>
     </ng-container>
 
