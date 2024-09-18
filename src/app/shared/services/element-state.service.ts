@@ -68,14 +68,13 @@ export class ElementStateService extends RxState<{
   }
 
   updateElement(updatedElement: PeriodicElement): void {
-    this.set((state) => {
-      return {
-        elements: state.elements.map((element) =>
-          element.position === updatedElement.position
-            ? updatedElement
-            : element
-        ),
-      };
-    });
+    this.set((state) => ({
+      elements: state.elements.map((element) => {
+        if (element.position === updatedElement.position) {
+          return { ...element, ...updatedElement };
+        }
+        return element;
+      }),
+    }));
   }
 }
