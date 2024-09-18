@@ -1,15 +1,15 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
-import { PeriodicTableService } from './periodic-table.service';
-import { PeriodicElement } from './periodic-table.model';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { debounceTime } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ElementStateService } from '../../shared/services/element-state.service';
+import { AsyncPipe } from '@angular/common';
+import { PeriodicElement } from './periodic-table.model';
 import { EditModalComponent } from '../edit-modal/edit-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-periodic-table',
@@ -22,11 +22,14 @@ import { EditModalComponent } from '../edit-modal/edit-modal.component';
     ReactiveFormsModule,
     FormsModule,
     MatProgressSpinnerModule,
+    AsyncPipe,
   ],
-  providers: [PeriodicTableService],
   templateUrl: './periodic-table.component.html',
 })
-export class PeriodicTableComponent implements OnInit {
+export class PeriodicTableComponent {
+  private destroyerRef = inject(DestroyRef);
+  elements$ = this.elementStateService.filteredElements$();
+  loading$ = this.elementStateService.loading$;
   displayedColumns: string[] = [
     'position',
     'name',
@@ -34,56 +37,15 @@ export class PeriodicTableComponent implements OnInit {
     'symbol',
     'actions',
   ];
-  filterControl = new FormControl('');
-  dataSource: PeriodicElement[] = [];
-  filteredData: PeriodicElement[] = [];
-  isLoading = true;
-  private destroyerRef = inject(DestroyRef);
 
   constructor(
-    private periodicTableService: PeriodicTableService,
-    public dialog: MatDialog
+    private elementStateService: ElementStateService,
+    private dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {
-    this.loadData();
-    this.initializeFilter();
-  }
-
-  private loadData(): void {
-    this.isLoading = true;
-    this.periodicTableService
-      .getElements()
-      .pipe(takeUntilDestroyed(this.destroyerRef))
-      .subscribe((data) => {
-        this.dataSource = data;
-        this.filteredData = data;
-        this.isLoading = false;
-      });
-  }
-
-  private initializeFilter(): void {
-    this.filterControl.valueChanges
-      .pipe(debounceTime(2000), takeUntilDestroyed(this.destroyerRef))
-      .subscribe((value) => {
-        const filterValue = value ? value.trim().toLowerCase() : '';
-        this.applyFilter(filterValue);
-      });
-  }
-
-  applyFilter(filter: string): void {
-    if (!filter) {
-      this.filteredData = this.dataSource;
-      return;
-    }
-
-    this.filteredData = this.dataSource.filter(
-      (element) =>
-        element.name.toLowerCase().includes(filter) ||
-        element.symbol.toLowerCase().includes(filter) ||
-        element.weight.toString().includes(filter) ||
-        element.position.toString().includes(filter)
-    );
+  onFilterInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.elementStateService.applyFilter(input.value);
   }
 
   openEditModal(element: PeriodicElement): void {
@@ -97,22 +59,8 @@ export class PeriodicTableComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyerRef))
       .subscribe((result) => {
         if (result) {
-          this.updateElement(result);
+          this.elementStateService.updateElement(result);
         }
       });
-  }
-
-  private updateElement(updatedElement: PeriodicElement): void {
-    const index = this.dataSource.findIndex(
-      (el) => el.position === updatedElement.position
-    );
-    if (index !== -1) {
-      this.dataSource = [
-        ...this.dataSource.slice(0, index),
-        updatedElement,
-        ...this.dataSource.slice(index + 1),
-      ];
-      this.applyFilter(this.filterControl.value || '');
-    }
   }
 }

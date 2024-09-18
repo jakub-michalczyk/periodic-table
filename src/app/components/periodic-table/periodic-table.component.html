@@ -1,16 +1,16 @@
 <div class="px-4 max-w-lg mx-auto py-6">
   <mat-form-field class="w-full">
-    <input matInput placeholder="Filter" [formControl]="filterControl" />
+    <input matInput placeholder="Filter" (input)="onFilterInput($event)" />
   </mat-form-field>
 
-  @if(isLoading){
+  @if(loading$ | async){
   <div
     class="spinner-container bg-white flex justify-center items-center p-12 h-96"
   >
     <mat-spinner diameter="50"></mat-spinner>
   </div>
   } @else {
-  <table mat-table [dataSource]="filteredData">
+  <table mat-table [dataSource]="(elements$ | async) ?? []">
     <!-- Position Column -->
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef>No.</th>
@@ -53,7 +53,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-  } @if(filteredData.length === 0){
+  } @if((elements$ | async)?.length === 0){
   <div class="text-white text-center my-4">
     <p>No search results.</p>
   </div>

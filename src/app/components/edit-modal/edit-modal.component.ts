@@ -46,7 +46,7 @@ export class EditModalComponent {
 
   onSave(): void {
     if (this.editForm.valid) {
-      this.dialogRef.close(this.editForm.value);
+      this.dialogRef.close(this.editForm.getRawValue());
     }
   }
 }
