@@ -1,2 +1,8 @@
-@import "tailwindcss/theme";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/theme';
+@import 'tailwindcss/utilities';
+
+@theme {
+  --color-stone-250: #fff9f9;
+  --color-amber-450: #f0c61e;
+  --font-sans: 'Roboto', 'sans-serif';
+}

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { PeriodicTableComponent } from '../components/periodic-table/periodic-table.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
-  templateUrl: './app.component.html'
+  imports: [PeriodicTableComponent],
+  templateUrl: './app.component.html',
 })
 export class AppComponent {}

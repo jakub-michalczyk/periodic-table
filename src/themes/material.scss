@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+
+$ripe_lemon: #f0c61e;
+$corners: 4px;
+$button_height: 32px;
+$button_label_size: 12px;
+
+@include mat.button-overrides(
+  (
+    filled-container-color: $ripe_lemon,
+    filled-container-shape: $corners,
+    filled-container-height: $button_height,
+    filled-label-text-size: $button_label_size,
+  )
+);
+
+@include mat.table-overrides(
+  (
+    header-headline-weight: bold,
+  )
+);
