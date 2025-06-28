@@ -3,17 +3,17 @@
     <form class="w-full flex bg-neutral-100 pt-9 pb-4 px-9 box-border rounded-t-2xl">
       <input
         placeholder="Filter..."
-        class="w-full align-middle border bg-white border-neutral-200 focus:outline-0 focus:shadow-lg transition-shadow duration-300 rounded h-9 placeholder:text-neutral-250 font-sans px-4 text-base shadow-sm"
+        class="_input"
         [formControl]="filter"
       />
     </form>
     <div class="px-9 pb-9 pt-4 overflow-hidden">
       <div class="overflow-x-auto w-full">
-        <table mat-table [dataSource]="elements()">
+        <table mat-table [dataSource]="dataSource">
           @for (columnLabel of columns; track $index) {
             <ng-container [matColumnDef]="columnLabel">
               <th mat-header-cell *matHeaderCellDef>{{ columnLabel | uppercase }}</th>
-              @if (columnLabel === 'actions') {
+              @if (columnLabel === ETableColumnNames.ACTIONS) {
                 <td mat-cell *matCellDef="let el" class="!text-center">
                   <button matButton="filled" aria-label="Edit element" (click)="onEdit(el)">
                     EDIT
@@ -22,12 +22,7 @@
               } @else {
                 <td mat-cell *matCellDef="let el">
                   <div
-                    [ngClass]="{
-                      'border rounded-full flex items-center justify-center':
-                        columnLabel === 'position' || columnLabel === 'symbol',
-                      'w-5 h-5  text-neutral-400 border-neutral-400': columnLabel === 'position',
-                      'w-10 text-amber-450 border-amber-450': columnLabel === 'symbol',
-                    }"
+                    [ngClass]="getColumnClasses(columnLabel)"
                   >
                     {{ el[columnLabel] }}
                   </div>

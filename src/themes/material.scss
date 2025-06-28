@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 
+$black: #000;
 $ripe_lemon: #f0c61e;
 $corners: 4px;
 $button_height: 32px;
@@ -11,6 +12,12 @@ $button_label_size: 12px;
     filled-container-shape: $corners,
     filled-container-height: $button_height,
     filled-label-text-size: $button_label_size,
+
+    outlined-container-shape: $corners,
+    outlined-container-height: $button_height,
+    outlined-label-text-size: $button_label_size,
+    outlined-label-text-color: $ripe_lemon,
+    outlined-outline-color: $ripe_lemon,
   )
 );
 

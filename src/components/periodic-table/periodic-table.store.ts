@@ -1,12 +1,11 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-
-import { PeriodicElement } from './periodic-table.model';
+import { IPeriodicElement } from './periodic-table.model';
 import { PeriodicTableService } from '../../services/periodic-table.service';
 
 @Injectable({ providedIn: 'root' })
 export class PeriodicTableStore {
   private periodicTableService = inject(PeriodicTableService);
-  private _elements = signal<PeriodicElement[]>([]);
+  private _elements = signal<IPeriodicElement[]>([]);
   private _filterTerm = signal('');
 
   elements = this._elements;
@@ -30,5 +29,13 @@ export class PeriodicTableStore {
 
   setFilterTerm(value: string) {
     this._filterTerm.set(value);
+  }
+
+  updateElementByIndex(updated: IPeriodicElement, index: number) {
+    this._elements.update((elements) => {
+      const clone = structuredClone(elements);
+      clone[index] = structuredClone(updated);
+      return clone;
+    });
   }
 }

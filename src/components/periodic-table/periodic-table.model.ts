@@ -1,10 +1,14 @@
-export interface PeriodicElement {
+export interface IPeriodicElement {
   position: number;
   name: string;
   weight: number;
   symbol: string;
 }
 
-export interface PeriodicTableState {
-  elements: PeriodicElement[];
+export enum ETableColumnNames {
+  POSITION = 'position',
+  NAME = 'name',
+  WEIGHT = 'weight',
+  SYMBOL = 'symbol',
+  ACTIONS = 'actions',
 }
