@@ -1,2 +1,12 @@
-@import "tailwindcss/theme";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/theme';
+@import 'tailwindcss/utilities';
+
+@theme {
+  --color-stone-250: #fff9f9;
+  --color-amber-450: #f0c61e;
+  --font-sans: 'Roboto', 'sans-serif';
+}
+
+._input {
+  @apply w-full align-middle border bg-white box-border border-neutral-200 focus:outline-0 focus:shadow-lg transition-shadow duration-300 rounded h-9 font-sans px-4 text-base shadow-sm;
+}

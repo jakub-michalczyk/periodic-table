@@ -1,0 +1,18 @@
+<div class="p-6 max-w-full">
+  <form [formGroup]="form" class="flex flex-col gap-4">
+    @for (key of fields; track $index) {
+      <input
+        [attr.placeholder]="key | titlecase"
+        class="_input"
+        [attr.type]="isNumberField(key) ? 'number' : 'text'"
+        [attr.step]="getStepForField(key)"
+        [formControlName]="key"
+      />
+    }
+
+    <div class="flex gap-2 pt-2">
+      <button mat-flat-button color="primary" type="button" (click)="save()">SAVE</button>
+      <button mat-stroked-button type="button" (click)="cancel()">CANCEL</button>
+    </div>
+  </form>
+</div>
